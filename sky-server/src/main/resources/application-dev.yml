@@ -6,3 +6,8 @@ sky:
     database: sky_take_out
     username: baroot
     password: Baroot@456qaz
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5tBQhhUiXNUgndnjT8me
+    access-key-secret: WFGe6Mmjtq3tqhrjOQH8Or2W5Tc3dm
+    bucket-name: ericjohnson
