@@ -11,3 +11,8 @@ sky:
     access-key-id: LTAI5tBQhhUiXNUgndnjT8me
     access-key-secret: WFGe6Mmjtq3tqhrjOQH8Or2W5Tc3dm
     bucket-name: ericjohnson
+  redis:
+    host: 121.40.118.178
+    port: 6379
+    password: 123456
+    database: 0
