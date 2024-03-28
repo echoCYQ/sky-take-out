@@ -28,6 +28,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private DishMapper dishMapper;
     @Autowired
     private SetmealMapper setmealMapper;
+
     /**
      * 添加购物车
      *
@@ -46,19 +47,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             ShoppingCart cart = list.get(0);
             cart.setNumber(cart.getNumber() + 1);
             shoppingCartMapper.updateNumberById(cart);
-        }else {
+        } else {
             // 如果不存在了,需要插入一条购物车数据
 
-            //判断本次添加到购物车的是菜品还是套餐
+            // 判断本次添加到购物车的是菜品还是套餐
             Long dishId = shoppingCartDTO.getDishId();
-            if(dishId != null){
-                //本次添加的是菜品
+            if (dishId != null) {
+                // 本次添加的是菜品
                 Dish dish = dishMapper.getById(dishId);
                 shoppingCart.setName(dish.getName());
                 shoppingCart.setImage(dish.getImage());
                 shoppingCart.setAmount(dish.getPrice());
-            }else {
-                //本次添加的是套餐
+            } else {
+                // 本次添加的是套餐
                 Long setmealId = shoppingCartDTO.getSetmealId();
 
                 Setmeal setmeal = setmealMapper.getById(setmealId);
@@ -70,7 +71,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.inset(shoppingCart);
         }
+    }
 
-
+    /**
+     * 查看购物车
+     * @return
+     */
+    @Override
+    public List<ShoppingCart> showShoppingCart() {
+        //获取到当前用户的ID
+        Long userId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .userId(userId)
+                .build();
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+        return list;
     }
 }
