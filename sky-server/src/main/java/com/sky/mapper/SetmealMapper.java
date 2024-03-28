@@ -10,6 +10,7 @@ import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -18,11 +19,11 @@ public interface SetmealMapper {
 
     /**
      * 根据分类id查询套餐的数量
-     * @param id
+     * @param categoryId
      * @return
      */
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
-    Integer countByCategoryId(Long id);
+    Integer countByCategoryId(Long categoryId);
 
     /**
      * 套餐份额也查询
@@ -46,9 +47,11 @@ public interface SetmealMapper {
      * 根据id删除套餐
      * @param setmealId
      */
-    @Delete("delete from setmeal where id = #{id}")
+    @Delete("delete from setmeal where id = #{setmealId}")
     void deleteById(Long setmealId);
 
+    // @Update("update setmeal set status = #{status} where id = #{id}")
+    @AutoFill(OperationType.INSERT)
     void update(Setmeal setmeal);
 
     /**
