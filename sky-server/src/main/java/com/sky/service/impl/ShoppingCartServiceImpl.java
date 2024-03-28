@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -96,5 +95,29 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         //获取到当前用户的ID
         Long userId = BaseContext.getCurrentId();
         shoppingCartMapper.deleteByUserId(userId);
+    }
+
+    /**
+     * 删除购物车中一个商品
+     */
+    @Override
+    public void subShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+        // 判断当前购物车的商品是否已经存在
+        ShoppingCart shoppingCart = new ShoppingCart();
+
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        Long userId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(userId);
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+
+        // 如果已经存在了,且数量大于1 则数量-1
+        if (list != null && list.size() > 0 ) {
+            ShoppingCart cart = list.get(0);
+            cart.setNumber(cart.getNumber() - 1);
+            shoppingCartMapper.updateNumberById(cart);
+            if (cart.getNumber() <= 0){
+                shoppingCartMapper.deleteById(cart.getId());
+            }
+        }
     }
 }
