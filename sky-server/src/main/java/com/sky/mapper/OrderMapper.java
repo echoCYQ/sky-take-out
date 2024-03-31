@@ -1,6 +1,9 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,7 +22,7 @@ public interface OrderMapper {
      * 根据订单号查询订单
      * @param orderNumber
      */
-    @Select("select * from orders where number = #{orderNumber}")
+    @Select("select * from orders where id = #{orderNumber}")
     Orders getByNumber(String orderNumber);
 
     /**
@@ -29,4 +32,13 @@ public interface OrderMapper {
     void update(Orders orders);
 
 
+    /**
+     * 分页条件查询并按下单时间排序
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    @Delete("delete from orders where id =#{id}")
+    void deleteById(Long id);
 }
