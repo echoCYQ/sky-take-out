@@ -4,6 +4,7 @@ import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -83,19 +84,19 @@ public class ReportServiceImpl implements ReportService {
             begin = begin.plusDays(1);
             dateList.add(begin);
         }
-        //每天新增用户量
+        // 每天新增用户量
         List<Integer> newUserList = new ArrayList<>();
-        //总用户量
+        // 总用户量
         List<Integer> totalList = new ArrayList<>();
         for (LocalDate localDate : dateList) {
             LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
             LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
             Map map = new HashMap();
-            map.put("end",endTime);
-            //用户新增数量
+            map.put("end", endTime);
+            // 用户新增数量
             Integer newUser = userMapper.countByMap(map);
-            map.put("begin",beginTime);
-            //总用户数量
+            map.put("begin", beginTime);
+            // 总用户数量
             Integer totalUser = userMapper.countByMap(map);
             totalList.add(totalUser);
             newUserList.add(newUser);
@@ -104,8 +105,75 @@ public class ReportServiceImpl implements ReportService {
         return UserReportVO
                 .builder()
                 .dateList(StringUtils.join(dateList, ","))
-                .newUserList(StringUtils.join(newUserList,","))
-                .totalUserList(StringUtils.join(totalList,","))
+                .newUserList(StringUtils.join(newUserList, ","))
+                .totalUserList(StringUtils.join(totalList, ","))
                 .build();
+    }
+
+    /**
+     * 统计指定时间区间内的订单数据
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end) {
+        // 当前集合用于存放begin到end范围内的每天日期
+        ArrayList<LocalDate> dataList = new ArrayList<>();
+        dataList.add(begin);
+        while (!begin.equals(end)) {
+            // 日期计算,计算指定日期的后一天
+            begin = begin.plusDays(1);
+            dataList.add(begin);
+        }
+        List<Integer> orderCountList = new ArrayList<>();
+        List<Integer> vaildOrderCountList = new ArrayList<>();
+        // 查询每天有效订单数
+        for (LocalDate localDate : dataList) {
+            // 查询每天订单总数
+            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+            Integer orderCount = getOrderCount(beginTime, endTime, null);
+            // 查询每天有效订单总数
+            Integer vaildOrderCount = getOrderCount(beginTime, endTime, Orders.COMPLETED);
+            orderCountList.add(orderCount);
+            vaildOrderCountList.add(vaildOrderCount);
+        }
+        // 时间区间内的订单总数
+        Integer totalOrderCount = orderCountList.stream().reduce(Integer::sum).get();
+        // 时间区间内的有效订单总数
+        Integer totalVaildOrederCount = vaildOrderCountList.stream().reduce(Integer::sum).get();
+        // 技术订单完成率
+        Double orderCompletionRate = 0.0;
+        if (totalOrderCount != 0) {
+            orderCompletionRate = totalVaildOrederCount.doubleValue() / totalOrderCount;
+        }
+
+        return OrderReportVO
+                .builder()
+                .dateList(StringUtils.join(dataList, ","))
+                .orderCountList(StringUtils.join(orderCountList, ","))
+                .validOrderCountList(StringUtils.join(vaildOrderCountList, ","))
+                .totalOrderCount(totalOrderCount)
+                .validOrderCount(totalVaildOrederCount)
+                .orderCompletionRate(orderCompletionRate)
+                .build();
+    }
+
+    /**
+     * 根据条件统计订单数量
+     *
+     * @param begin
+     * @param end
+     * @param status
+     * @return
+     */
+    private Integer getOrderCount(LocalDateTime begin, LocalDateTime end, Integer status) {
+        Map map = new HashMap();
+        map.put("begin", begin);
+        map.put("end", end);
+        map.put("status", Orders.COMPLETED);
+        return orderMapper.countByMap(map);
     }
 }
