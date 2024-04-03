@@ -101,4 +101,21 @@
             </if>
         </where>
     </select>
+
+    <select id="getSalesTOP10" resultType="com.sky.dto.GoodsSalesDTO">
+        SELECT od.name, COUNT(od.id), SUM(od.number) as number
+        FROM order_detail od,orders o
+        <where>
+            od.order_id = o.id AND o.status = 5
+            <if test="begin != null ">
+                and order_time &gt; #{begin}
+            </if>
+            <if test="end != null ">
+                and order_time &lt; #{end}
+            </if>
+        </where>
+        GROUP BY od.name
+        order by  number desc
+        limit 10
+    </select>
 </mapper>
