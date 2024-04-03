@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.constant.MessageConstant;
 import com.sky.result.Result;
+import com.sky.service.FileUploadService;
 import com.sky.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class CommonController {
 
     @Autowired
-    private AliOssUtil aliOssUtil;
+    private FileUploadService fileUploadService;
 
     /**
      * 文件上传
@@ -37,21 +38,9 @@ public class CommonController {
     @ApiOperation("文件上传")
     public Result<String> upload(MultipartFile file) {  // file 名要和前端提交名保持一致
         log.info("文件上传:{}", file);
-        try {
-            // 原始文件名
-            String originalFilename = file.getOriginalFilename();
-            // 获取扩展名
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            // 构造新文件名称
-            String objectName = UUID.randomUUID().toString() + extension;
-            // 文件请求路径
-            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
-            return Result.success(filePath);
-        } catch (IOException e) {
-            log.error("文件上失败:{}", e);
-        }
+        // 文件请求路径
+        String filePath = fileUploadService.fileUpload(file);
+        return Result.success(filePath);
 
-
-        return Result.error(MessageConstant.UPLOAD_FAILED);
     }
 }

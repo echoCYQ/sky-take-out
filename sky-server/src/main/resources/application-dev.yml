@@ -1,21 +1,26 @@
 sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: 121.40.118.178
+    host: 127.0.0.1
     port: 3306
     database: sky_take_out
-    username: baroot
-    password: Baroot@456qaz
+    username: root
+    password: Sqroot@456qaz
   alioss:
     endpoint: oss-cn-beijing.aliyuncs.com
     access-key-id: LTAI5tBQhhUiXNUgndnjT8me
     access-key-secret: WFGe6Mmjtq3tqhrjOQH8Or2W5Tc3dm
     bucket-name: ericjohnson
   redis:
-    host: 121.40.118.178
+    host: 127.0.0.1
     port: 6379
-    password: 123456
+    password:
     database: 0
   wechat:
     appid: wxefc271867cc738ed
     secret: 95caf90296578d48ae3177e13b481fad
+minio:
+  endpointUrl: http://127.0.0.1:9000  # 修改为 endpointUrl 以匹配 @Value("${minio.endpointUrl}")
+  accessKey: IzM6YRgpcCfJj5AMFo21
+  secretKey: nyjQ1I2A6TBTz3ZlBYEZQpdTl8CNH8eVnRGNj5Oz  # 修改为 secretKey 以匹配 @Value("${minio.secretKey}")
+  bucketName: demo  # 确保属性名为 bucketName
