@@ -1,25 +1,35 @@
+# 数据库配置 (需通过环境变量注入真实值)
 sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: ${DB_HOST:127.0.0.1}
-    port: ${DB_PORT:3306}
-    database: ${DB_NAME:sky_take_out}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}  # 必须通过环境变量注入
+    host: DB_HOST:127.0.0.1          # 数据库地址
+    port: DB_PORT:3306               # 数据库端口
+    database: DB_NAME:sky_take_out   # 数据库名
+    username: DB_USER:root           # 数据库账号
+    password: DB_PASSWORD            # 数据库密码（必须通过环境变量设置）
 
+  # 阿里云OSS配置
+  alioss:
+    endpoint: OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com  # OSS端点
+    access-key-id: OSS_ACCESS_KEY_ID                    # AccessKey ID
+    access-key-secret: OSS_ACCESS_KEY_SECRET            # AccessKey Secret
+    bucket-name: OSS_BUCKET:your-bucket                # 存储桶名称
 
+  # Redis配置
   redis:
-    host: ${REDIS_HOST:127.0.0.1}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
-    database: ${REDIS_DB:0}
+    host: REDIS_HOST:127.0.0.1       # Redis地址
+    port: REDIS_PORT:6379            # Redis端口
+    password: REDIS_PASSWORD        # Redis密码（空默认值）
+    database: REDIS_DB:0             # Redis库索引
 
+  # 微信配置
   wechat:
-    appid: ${WECHAT_APPID}
-    secret: ${WECHAT_SECRET}
+    appid: WECHAT_APPID              # 微信应用ID
+    secret: WECHAT_SECRET            # 微信应用密钥
 
+# MinIO配置
 minio:
-  endpointUrl: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
-  accessKey: ${MINIO_ACCESS_KEY}
-  secretKey: ${MINIO_SECRET_KEY}
-  bucketName: ${MINIO_BUCKET:demo}
+  endpointUrl: MINIO_ENDPOINT:http://127.0.0.1:9000  # MinIO地址
+  accessKey: MINIO_ACCESS_KEY        # MinIO访问密钥
+  secretKey: MINIO_SECRET_KEY        # MinIO私有密钥
+  bucketName: MINIO_BUCKET:demo     # MinIO存储桶
