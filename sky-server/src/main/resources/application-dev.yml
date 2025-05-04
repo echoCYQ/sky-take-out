@@ -7,11 +7,6 @@ sky:
     username: ${DB_USER}
     password: ${DB_PASSWORD}  # 必须通过环境变量注入
 
-alioss:
-  endpoint: ${OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com}
-  access-key-id: ${OSS_ACCESS_KEY_ID}       # 通过环境变量注入
-  access-key-secret: ${OSS_ACCESS_KEY_SECRET} # 通过环境变量注入
-  bucket-name: ${OSS_BUCKET:your-bucket}
 
   redis:
     host: ${REDIS_HOST:127.0.0.1}
