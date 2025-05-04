@@ -8,12 +8,7 @@ sky:
     username: DB_USER:root           # 数据库账号
     password: DB_PASSWORD            # 数据库密码（必须通过环境变量设置）
 
-  # 阿里云OSS配置
-  alioss:
-    endpoint: OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com  # OSS端点
-    access-key-id: OSS_ACCESS_KEY_ID                    # AccessKey ID
-    access-key-secret: OSS_ACCESS_KEY_SECRET            # AccessKey Secret
-    bucket-name: OSS_BUCKET:your-bucket                # 存储桶名称
+
 
   # Redis配置
   redis:
